@@ -10,17 +10,21 @@ import SettingsLayout from '@/layouts/settings/Layout.vue';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
-        title: 'Transaksi',
-        href: '/dashboard/transactions',
+        title: 'Appearance settings',
+        href: '/settings/appearance',
     },
 ];
 </script>
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Transactions" />
-        <div class="space-y-6">
+        <Head title="Appearance settings" />
 
-        </div>
+        <SettingsLayout>
+            <div class="space-y-6">
+                <HeadingSmall title="Appearance settings" description="Update your account's appearance settings" />
+                <AppearanceTabs />
+            </div>
+        </SettingsLayout>
     </AppLayout>
 </template>

@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('billiard_tables', function (Blueprint $table) {
+        Schema::create('pricing_rates', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('number')->unique();
-            $table->enum('status', ['available', 'occupied','maintenance'])->default('available');
+            $table->decimal('price_per_hour',10,2);
+            $table->time('start_at')->nullable();
+            $table->time('end_at')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('billiard_tables');
+        Schema::dropIfExists('pricing_rates');
     }
 };

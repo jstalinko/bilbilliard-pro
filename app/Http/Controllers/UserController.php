@@ -2,35 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BilliardTable;
+use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 
-class BilliardTableController extends Controller
+class UserController extends Controller
 {
-
-    public function monitor():\Inertia\Response
-    {
-        $data['billiardTables'] = BilliardTable::all()->sortBy('number');
-        
-        return Inertia::render('billiard/Monitor',$data);
-    }
     /**
      * Display a listing of the resource.
      */
     public function index():\Inertia\Response
     {
-        
-        return Inertia::render('billiard/Index');
+        $data['users'] = User::all()->sortBy('id');
+        return Inertia::render('users/Index',$data);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create():\Inertia\Response
+    public function create()
     {
         $data['action'] = 'create';
-        return Inertia::render('billiard/Form',$data);
+        return Inertia::render('users/Form',$data);
+        
     }
 
     /**
@@ -55,7 +49,8 @@ class BilliardTableController extends Controller
     public function edit(string $id)
     {
         $data['action'] = 'edit';
-        return Inertia::render('billiard/Form',$data);
+        $data['user'] = User::find($id);
+        return Inertia::render('users/Form',$data);
     }
 
     /**

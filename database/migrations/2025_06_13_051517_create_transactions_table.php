@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('type', ['session', 'direct']);
             $table->string('payment_method');
             $table->decimal('paid_amount', 10, 2);
+            $table->decimal('total_amount',10,2);
             $table->decimal('change', 10, 2)->default(0);
             $table->text('note')->nullable();
             $table->timestamps();

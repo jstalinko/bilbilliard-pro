@@ -188,7 +188,8 @@ const handleFilter = (value: string) => {
     <AppLayout :breadcrumbs="breadcrumbItems">
         <Head title="Billiard Tables" />
         
-        <DataTable
+       <div class="div-y-6 p-4">
+         <DataTable
           :data="billiardTables"
           :columns="columns"
           :actions="actions"
@@ -214,5 +215,6 @@ const handleFilter = (value: string) => {
             </Badge>
           </template>
         </DataTable>
+       </div>
     </AppLayout>
 </template>

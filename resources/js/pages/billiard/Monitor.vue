@@ -175,16 +175,17 @@ const getStatusText = (status: string): string => {
                 
                 <CardContent class="space-y-3">
                     <!-- Table Number -->
-                    <div class="text-center">
-                        <div class="mx-auto h-16 w-auto rounded-lg bg-slate-700 flex items-center justify-center text-white font-bold text-xl shadow-lg hover:bg-slate-500">
-                            <span v-if="table.status == 'available'">
-                                Open Table
-                            </span>
-                            <span v-else>
-                                Close Table
-                            </span>
-                        </div>
-                    </div>
+                 <div class="text-center bg-slate-800 text-white p-4 rounded-lg shadow-lg">
+    <div class="font-bold text-xl mb-4">{{ table.name }}</div>
+    <button
+        class="w-full py-2 rounded-md bg-slate-700 hover:bg-slate-500 transition font-semibold"
+        :class="{ 'bg-green-600': table.status == 'available', 'bg-red-600': table.status != 'available' }"
+    >
+        <span v-if="table.status == 'available'">Open Table</span>
+        <span v-else>Close Table</span>
+    </button>
+</div>
+
                     
                     <!-- Occupied Information -->
                     <div v-if="table.status === 'occupied'" class="space-y-2 pt-2 border-t">

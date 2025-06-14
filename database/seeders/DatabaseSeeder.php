@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now()
         ]);
 
-    // \App\Models\BilliardTable::factory(5)->create(); // 5 meja
-    // \App\Models\Product::factory(10)->create(); // 10 produk
+    \App\Models\BilliardTable::factory(24)->create(); // 5 meja
+    \App\Models\Product::factory(10)->create(); // 10 produk
 
     // $this->call([
     //     SessionAndTransactionSeeder::class,

@@ -17,9 +17,9 @@ class BilliardTableFactory extends Factory
     public function definition(): array
     {
         return [
-            'number' => $this->faker->unique()->numerify('Meja-##'),
-            'rate_per_hour' => $this->faker->randomElement([30000, 40000, 50000]),
-            'status' => 'available',
+            'name' => $this->faker->randomElement(['RASSON-'.rand(1,9) , 'AILEEX-'.rand(1,9),'PREDATOR-'.rand(1,9)]),
+            'number' => $this->faker->unique()->numerify('##'),
+            'status' => $this->faker->randomElement(['available','maintenance']),
         ];
     }
 }
