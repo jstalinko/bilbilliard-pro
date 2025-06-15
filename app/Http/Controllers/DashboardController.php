@@ -37,7 +37,7 @@ class DashboardController extends Controller
         $thisMonthRevenue = Transaction::whereBetween('created_at', [
             $thisMonth, 
             Carbon::now()
-        ])->sum('paid_amount'); 
+        ])->sum('total_amount'); 
        
         $lastMonthTransactions = Transaction::whereBetween('created_at', [
             $lastMonth->startOfMonth(), 
@@ -47,7 +47,7 @@ class DashboardController extends Controller
         $lastMonthRevenue = Transaction::whereBetween('created_at', [
             $lastMonth->startOfMonth(), 
             $lastMonthEnd
-        ])->sum('paid_amount');
+        ])->sum('total_amount');
 
         // Calculate percentage comparisons
         $todayIncrease = $yesterdayTx > 0 
@@ -58,6 +58,12 @@ class DashboardController extends Controller
             ? (($thisMonthTransactions - $lastMonthTransactions) / $lastMonthTransactions) * 100 
             : $thisMonthRevenue / 1 * 100;
 
+        
+        $pendingTx = Transaction::where('tx_status','pending')->count();
+        $completeTx = Transaction::where('tx_status','complete')->count();
+        $pendingTotal = Transaction::where('tx_status','pending')->sum('total_amount');
+        $completeTotal = Transaction::where('tx_status','complete')->sum('total_amount');
+
         $transactionStats = [
             'today' => $todayTx,
             'todayIncrease' => round($todayIncrease, 1),
@@ -65,7 +71,11 @@ class DashboardController extends Controller
             'thisMonthRevenue' => $thisMonthRevenue,
             'lastMonth' => $lastMonthTransactions,
             'lastMonthRevenue' => $lastMonthRevenue,
-            'monthComparison' => round($monthComparison, 1)
+            'monthComparison' => round($monthComparison, 1),
+            'pending' => $pendingTx,
+            'complete' => $completeTx,
+            'pendingTotal' => $pendingTotal,
+            'completeTotal' => $completeTotal
         ];
 
 

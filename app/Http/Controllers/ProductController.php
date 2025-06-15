@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -12,7 +13,8 @@ class ProductController extends Controller
      */
     public function index():\Inertia\Response
     {
-        return Inertia::render('products/Index');
+        $data['products'] = Product::all()->sortBy('id');
+        return Inertia::render('products/Index',$data);
     }
 
     /**

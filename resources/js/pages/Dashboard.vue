@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,8 +11,16 @@ import {
   CalendarDaysIcon, 
   CalendarIcon, 
   TrendingUpIcon, 
-  TrendingDownIcon 
+  TrendingDownIcon, 
+  RefreshCcwDotIcon,
+  CircleIcon,
+  CircleDotIcon,
+  CircleCheckBigIcon,
+  PlusCircleIcon
 } from 'lucide-vue-next';
+import Button from '@/components/ui/button/Button.vue';
+import { formatRupiah } from '@/lib/utils';
+
 
 // Types
 interface TotalStats {
@@ -30,6 +38,10 @@ interface TransactionStats {
   lastMonth: number;
   lastMonthRevenue: number;
   monthComparison: number;
+  pending:number;
+  complete:number;
+  pendingTotal:number;
+  completeTotal:number;
 }
 
 interface Props {
@@ -52,7 +64,11 @@ const props = withDefaults(defineProps<Props>(), {
     thisMonthRevenue: 15420000,
     lastMonth: 198,
     lastMonthRevenue: 12350000,
-    monthComparison: 23.7
+    monthComparison: 23.7,
+    pending:0,
+    complete:0,
+    pendingTotal:0,
+    completeTotal:0
   })
 });
 
@@ -89,7 +105,7 @@ const formatCurrency = (amount: number): string => {
           <CardContent>
             <div class="text-2xl font-bold">{{ totalStats.meja }}</div>
             <p class="text-xs text-muted-foreground">
-              Meja tersedia di restoran
+              Meja billiard tersedia
             </p>
           </CardContent>
         </Card>
@@ -197,6 +213,63 @@ const formatCurrency = (amount: number): string => {
             </p>
           </CardContent>
         </Card>
+      </div>
+
+
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+        <div >
+          <Link href="/dashboard/billiards/update-all-tables?status=available">
+          <Button class="cursor-pointer">
+            <RefreshCcwDotIcon class="h-24 w-24"/> Update available all billiard tables
+          </Button>
+        </Link>
+          &nbsp;
+          <Link href="/dashboard/members/create">
+          <Button class=" cursor-pointer ">
+            <UsersIcon class="h-24 w-24"/> Tambah member
+          </Button>
+        </Link>
+          &nbsp;
+          <Link href="/dashboard/transactions/create">
+          <Button class="cursor-pointer">
+            <PlusCircleIcon class="h-24 w-24"/> Transaksi Baru
+          </Button>
+        </Link>
+        </div>
+        <div>
+          
+            <Card>
+          <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle class="text-sm font-medium">Pending Transactions</CardTitle>
+            <CircleDotIcon class="h-4 w-4 text-yellow-500"/>
+
+          </CardHeader>
+          <CardContent>
+            <div class="text-2xl font-bold text-yellow-600">
+              {{ transactionStats.pending }}
+            </div>
+            <p class="text-xs text-muted-foreground">
+             Total transaksi pending : {{ formatRupiah(transactionStats.pendingTotal) }}
+            </p>
+          </CardContent>
+        </Card>
+        <br>
+          <Card>
+          <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle class="text-sm font-medium">Complete Transactions</CardTitle>
+            <CircleCheckBigIcon class="h-4 w-4 text-green-500"/>
+          </CardHeader>
+          <CardContent>
+            <div class="text-2xl font-bold text-green-600">
+              {{ transactionStats.complete }}
+            </div>
+            <p class="text-xs text-muted-foreground">
+             Total transaksi Complete : {{ formatRupiah(transactionStats.completeTotal) }}
+            </p>
+          </CardContent>
+        </Card>
+        
+        </div>
       </div>
     </div>
   </AppLayout>

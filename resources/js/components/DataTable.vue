@@ -256,29 +256,21 @@ watch(filterValue, (newValue) => {
             </TableCell>
             
             <!-- Actions column -->
-            <TableCell v-if="actions && actions.length > 0" class="text-right">
-              <slot name="actions" :row="row">
-                <DropdownMenu>
-                  <DropdownMenuTrigger as-child>
-                    <Button variant="ghost" class="h-8 w-8 p-0">
-                      <span class="sr-only">Open menu</span>
-                      <MoreHorizontal class="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem 
-                      v-for="action in actions" 
-                      :key="action.label"
-                      v-show="!action.show || action.show(row)"
-                      @click="action.onClick(row)"
-                      :class="action.variant === 'destructive' ? 'text-destructive' : ''"
-                    >
-                      {{ action.label }}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </slot>
-            </TableCell>
+          <TableCell v-if="actions && actions.length > 0" class="text-right space-x-2">
+  <slot name="actions" :row="row">
+    <template v-for="action in actions" :key="action.label">
+      <Button
+        size="sm"
+        :variant="action.variant === 'destructive' ? 'destructive' : 'default'"
+        @click="action.onClick(row)"
+        v-show="!action.show || action.show(row)"
+      >
+        {{ action.label }}
+      </Button>
+    </template>
+  </slot>
+</TableCell>
+
           </TableRow>
           
           <!-- Empty state -->

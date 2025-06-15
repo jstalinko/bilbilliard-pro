@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BilliardSession;
 use Inertia\Inertia;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
@@ -12,7 +14,9 @@ class TransactionController extends Controller
      */
     public function index(): \Inertia\Response
     {
-        return Inertia::render('transactions/Index');
+        $data['transactions'] = Transaction::orderBy('created_at', 'desc')->with('items')->with('session')->get();
+       // dd($data);
+        return Inertia::render('transactions/Index',$data);
     }
 
     /**
@@ -21,7 +25,16 @@ class TransactionController extends Controller
     public function create()
     {
         $data['action'] = 'create';
-        return Inertia::render('transactions/Form',$data);
+        $data['billiard_sessions']=BilliardSession::select([
+    'billiard_sessions.id',
+    'billiard_tables.name as table_name',
+    'billiard_tables.number as table_number'
+])
+->join('billiard_tables', 'billiard_sessions.billiard_table_id', '=', 'billiard_tables.id')
+->where('billiard_sessions.status', 'finished')
+->orderBy('billiard_sessions.id', 'desc')
+->get();
+ return Inertia::render('transactions/Form', $data);
     }
 
     /**
@@ -29,7 +42,7 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return response()->json($request->all());
     }
 
     /**
@@ -46,7 +59,7 @@ class TransactionController extends Controller
     public function edit(string $id)
     {
         $data['action'] = 'edit';
-        return Inertia::render('transactions/Form',$data);
+        return Inertia::render('transactions/Form', $data);
     }
 
     /**

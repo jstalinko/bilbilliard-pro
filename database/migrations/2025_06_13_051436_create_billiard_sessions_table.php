@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('billiard_sessions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('billiard_table_id')->constrained()->onDelete('cascade');
-            $table->timestamp('start_time');
-            $table->timestamp('end_time')->nullable();
+            $table->dateTime('start_time');
+            $table->dateTime('end_time')->nullable();
             $table->decimal('rate_per_hour', 10, 2);
             $table->decimal('total_price', 10, 2)->nullable();
             $table->enum('status', ['ongoing', 'finished'])->default('ongoing');

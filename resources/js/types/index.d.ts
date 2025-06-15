@@ -79,3 +79,29 @@ export interface StatsCard {
     label: string;
   };
 }
+export interface BilliardTable {
+  id: number;
+  name: string;
+  number: string;
+  status: 'available' | 'occupied' | 'maintenance';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BilliardSession {
+  id: number;
+  billiard_table_id: number;
+  start_time: string;
+  end_time?:string;
+  rate_per_hour:string;
+  total_price:string;
+  status:string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface JsonResponse{
+  success:boolean;
+  message?:string;
+   data?: Record<string, any>[] | Record<string, any> | any;
+}

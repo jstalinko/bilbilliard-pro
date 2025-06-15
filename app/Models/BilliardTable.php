@@ -12,4 +12,9 @@ class BilliardTable extends Model
     {
         return $this->hasMany(BilliardSession::class);
     }
+    public function session()
+    {
+        return $this->hasOne(BilliardSession::class)
+                ->where('status', 'ongoing');
+    }
 }

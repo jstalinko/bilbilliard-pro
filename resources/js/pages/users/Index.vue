@@ -16,9 +16,9 @@ interface User {
     name: string;
     updated_at: string;
 }
-const prop = defineProps({ users: Object });
-
-console.log(prop);
+const prop = defineProps<{
+  users: User[] | Object;
+}>();
 
 // Columns configuration
 const columns: TableColumn<User>[] = [
@@ -47,16 +47,13 @@ const columns: TableColumn<User>[] = [
 // Actions configuration
 const actions: TableAction<User>[] = [
     {
-        label: 'View Profile',
-        onClick: (row) => console.log('View profile:', row.id),
-    },
-    {
         label: 'Edit',
-        onClick: (row) => router.visit('/dashboard'),
+        onClick: (row) => router.visit('/dashboard/users/'+row.id),
     },
     {
         label: 'Delete',
-        onClick:(row) => console.log('Delete',row.id)
+        onClick:(row) => console.log('Delete',row.id),
+        variant:'destructive'
     }
 ];
 
@@ -101,35 +98,28 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
         <Head title="Billiard Tables" />
 
-        <div class="div-y-6 p-4">
-            <DataTable :data="users" :columns="columns" :actions="actions" title="Users Management"
+        <div class="space-y-6 p-4">
+            <DataTable :data="Object.values(users)" :columns="columns" :actions="actions" title="Users Management"
                 description="Manage system users and their permissions" :searchable="true"
                 search-placeholder="Search users..."  :add-button="true" add-button-label="Add User"
-                :caption="`Total users: ${users.length}`" empty-message="No users found.">
+                :caption="`Total users: ${Object.values(users).length}`" empty-message="No users found.">
                 <!-- Custom user cell with avatar -->
                 <template #cell-name="{ value, row }">
                     <div class="flex items-center gap-3">
                         <Avatar class="h-8 w-8">
-                            <AvatarImage :src="row.avatar" :alt="value" />
+
                             <AvatarFallback>{{ getInitials(value) }}</AvatarFallback>
                         </Avatar>
                         <span class="font-medium">{{ value }}</span>
                     </div>
                 </template>
-
-                <!-- Custom role badge -->
-                <template #cell-role="{ value }">
-                    <Badge :variant="getRoleVariant(value)">
-                        {{ value }}
-                    </Badge>
+                <template #cell-created_at="{value}">
+                    {{ new Date(value).toLocaleDateString() }}
                 </template>
-
-                <!-- Custom status badge -->
-                <template #cell-status="{ value }">
-                    <Badge :variant="getStatusVariant(value)">
-                        {{ value }}
-                    </Badge>
+                <template #cell-updated_at="{value}">
+                    {{ new Date(value).toLocaleDateString() }}
                 </template>
+                
             </DataTable>
         </div>
     </AppLayout>

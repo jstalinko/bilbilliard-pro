@@ -5,7 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { Banknote, BookOpen, Database, Folder, HeartIcon, LayoutGrid, Table } from 'lucide-vue-next';
+import { Banknote, BookOpen, Database, Folder, HeartIcon, LayoutGrid, PersonStandingIcon, Table } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
@@ -25,14 +25,23 @@ const mainNavItems: NavItem[] = [
         icon: Banknote
     },
     {
+        title:'Member',
+        href:'/dashboard/members',
+        icon:PersonStandingIcon
+    },
+    {
         title:'Data Master',
         href:'#',
         icon:Database,
         children:[
           
             {
-                title:'Meja',
+                title:'Billiard Table',
                 href:'/dashboard/billiards'
+            },
+            {
+                title:'Price Rate',
+                href:'/dashboard/price-rate'
             },
             {
                 title:'Produk',

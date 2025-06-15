@@ -22,11 +22,42 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now()
         ]);
 
-    \App\Models\BilliardTable::factory(24)->create(); // 5 meja
-    \App\Models\Product::factory(10)->create(); // 10 produk
+        \App\Models\BilliardTable::factory(24)->create(); // 5 meja
+         \App\Models\Product::factory(10)->create(); // 10 produk
 
-    // $this->call([
-    //     SessionAndTransactionSeeder::class,
-    // ]);
+        $pricing_rates = [
+            [
+                'name' => 'JAM-SIANG',
+                'price_per_hour' => 25000,
+                'start_at' => '10:00:00',
+                'end_at' => '14:00:00'
+            ],
+            [
+                'name' => 'JAM-SORE',
+                'price_per_hour' => 30000,
+                'start_at' => '14:01:00',
+                'end_at' => '18:00:00'
+            ],
+            [
+                'name' => 'JAM-MALAM',
+                'price_per_hour' => 35000,
+                'start_at' => '18:01:00',
+                'end_at' => '21:00:00'
+            ],
+            [
+                'name' => 'JAM-MIDNIGHT',
+                'price_per_hour' => 40000,
+                'start_at' => '21:01:00',
+                'end_at' => '02:00:00'
+            ]
+        ];
+        foreach($pricing_rates as $rate)
+        {
+            \App\Models\PricingRate::create($rate);
+        }
+
+        // $this->call([
+        //     SessionAndTransactionSeeder::class,
+        // ]);
     }
 }
