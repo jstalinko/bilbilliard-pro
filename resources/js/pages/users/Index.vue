@@ -1,12 +1,23 @@
-<!-- UsersTable.vue - Contoh penggunaan DataTable untuk data lain -->
 <script setup lang="ts">
 import { ref } from 'vue';
+import { router, useForm , Head } from '@inertiajs/vue3';
 import DataTable, { type TableColumn, type TableAction, type FilterOption } from '@/components/DataTable.vue';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { router } from '@inertiajs/vue3';
+import { Button } from '@/components/ui/button';
+import { 
+    AlertDialog, 
+    AlertDialogAction, 
+    AlertDialogCancel, 
+    AlertDialogContent, 
+    AlertDialogDescription, 
+    AlertDialogFooter, 
+    AlertDialogHeader, 
+    AlertDialogTitle, 
+    AlertDialogTrigger 
+} from '@/components/ui/alert-dialog';
 
 interface User {
     created_at: string;
@@ -16,9 +27,14 @@ interface User {
     name: string;
     updated_at: string;
 }
-const prop = defineProps<{
-  users: User[] | Object;
+
+const props = defineProps<{
+    users: User[] | Object;
 }>();
+
+const deleteForm = useForm({});
+const userToDelete = ref<User | null>(null);
+const showDeleteDialog = ref(false);
 
 // Columns configuration
 const columns: TableColumn<User>[] = [
@@ -31,7 +47,6 @@ const columns: TableColumn<User>[] = [
         key: 'email',
         label: 'Email',
     },
- 
     {
         key: 'created_at',
         label: 'Join Date',
@@ -40,7 +55,7 @@ const columns: TableColumn<User>[] = [
     {
         key: 'updated_at',
         label: 'Updated At',
-        width:'130px'
+        width: '130px'
     }
 ];
 
@@ -48,12 +63,15 @@ const columns: TableColumn<User>[] = [
 const actions: TableAction<User>[] = [
     {
         label: 'Edit',
-        onClick: (row) => router.visit('/dashboard/users/'+row.id),
+        onClick: (row) => router.visit(`/dashboard/users/${row.id}/edit`),
     },
     {
         label: 'Delete',
-        onClick:(row) => console.log('Delete',row.id),
-        variant:'destructive'
+        onClick: (row) => {
+            userToDelete.value = row;
+            showDeleteDialog.value = true;
+        },
+        variant: 'destructive'
     }
 ];
 
@@ -63,21 +81,27 @@ const filterOptions: FilterOption[] = [
     { label: 'Inactive', value: 'inactive' },
 ];
 
-const getRoleVariant = (role: string) => {
-    switch (role.toLowerCase()) {
-        case 'admin':
-            return 'destructive';
-        case 'moderator':
-            return 'secondary';
-        case 'user':
-            return 'outline';
-        default:
-            return 'default';
+const confirmDelete = () => {
+    if (userToDelete.value) {
+        deleteForm.get(`/dashboard/users/${userToDelete.value.id}/delete`, {
+            onSuccess: () => {
+                showDeleteDialog.value = false;
+                userToDelete.value = null;
+            },
+            onError: () => {
+                // Error handling is done by Laravel's flash messages
+            }
+        });
     }
 };
 
-const getStatusVariant = (status: string) => {
-    return status.toLowerCase() === 'active' ? 'default' : 'secondary';
+const cancelDelete = () => {
+    showDeleteDialog.value = false;
+    userToDelete.value = null;
+};
+
+const handleAddUser = () => {
+    router.visit('/dashboard/users/create');
 };
 
 const getInitials = (name: string) => {
@@ -92,35 +116,70 @@ const breadcrumbItems: BreadcrumbItem[] = [
 ];
 </script>
 
-
 <template>
     <AppLayout :breadcrumbs="breadcrumbItems">
-
-        <Head title="Billiard Tables" />
+        <Head title="User Management" />
 
         <div class="space-y-6 p-4">
-            <DataTable :data="Object.values(users)" :columns="columns" :actions="actions" title="Users Management"
-                description="Manage system users and their permissions" :searchable="true"
-                search-placeholder="Search users..."  :add-button="true" add-button-label="Add User"
-                :caption="`Total users: ${Object.values(users).length}`" empty-message="No users found.">
+            <DataTable 
+                :data="Object.values(users)" 
+                :columns="columns" 
+                :actions="actions" 
+                title="Users Management"
+                description="Manage system users and their permissions" 
+                :searchable="true"
+                search-placeholder="Search users..." 
+                :add-button="true"
+                @add="handleAddUser"
+                add-button-label="Add User"
+                :caption="`Total users: ${Object.values(users).length}`" 
+                empty-message="No users found."
+                
+            >
                 <!-- Custom user cell with avatar -->
                 <template #cell-name="{ value, row }">
                     <div class="flex items-center gap-3">
                         <Avatar class="h-8 w-8">
-
                             <AvatarFallback>{{ getInitials(value) }}</AvatarFallback>
                         </Avatar>
                         <span class="font-medium">{{ value }}</span>
                     </div>
                 </template>
-                <template #cell-created_at="{value}">
-                    {{ new Date(value).toLocaleDateString() }}
-                </template>
-                <template #cell-updated_at="{value}">
+                
+                <template #cell-created_at="{ value }">
                     {{ new Date(value).toLocaleDateString() }}
                 </template>
                 
+                <template #cell-updated_at="{ value }">
+                    {{ new Date(value).toLocaleDateString() }}
+                </template>
             </DataTable>
         </div>
+
+        <!-- Delete Confirmation Dialog -->
+        <AlertDialog :open="showDeleteDialog" @update:open="showDeleteDialog = $event">
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete the user 
+                        <strong>{{ userToDelete?.name }}</strong> and remove their data from the system.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel @click="cancelDelete" :disabled="deleteForm.processing">
+                        Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction 
+                        @click="confirmDelete" 
+                        :disabled="deleteForm.processing"
+                        class="bg-red-600 hover:bg-red-700"
+                    >
+                        <span v-if="deleteForm.processing">Deleting...</span>
+                        <span v-else>Delete User</span>
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     </AppLayout>
 </template>

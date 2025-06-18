@@ -3,19 +3,18 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\Models\PricingRate;
+use App\Models\Member;
 use Illuminate\Http\Request;
 
-class PricingRateController extends Controller
+class MemberController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index():\Inertia\Response
     {
-        $data['pricingrates'] = PricingRate::all();
-
-        return Inertia::render('price-rate/Index',$data);
+        $members = Member::all();
+        return Inertia::render('members/Index',['members' => $members]);
     }
 
     /**
@@ -23,7 +22,7 @@ class PricingRateController extends Controller
      */
     public function create():\Inertia\Response
     {
-        return Inertia::render('price-rate/Form',['isEdit' =>false,'pricingrate' => null]);
+        return Inertia::render('members/Form' , ['member' => null,'isEdit' => false]);
     }
 
     /**
@@ -45,10 +44,10 @@ class PricingRateController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $id):\Inertia\Response
     {
-        $pricingrate = PricingRate::find($id);
-        return Inertia::render('price-rate/Form',['isEdit' => true,'pricingrate' => $pricingrate]);
+        $member = Member::find($id);
+        return Inertia::render('members/Form' , ['member' => $member , 'isEdit' => true]);
     }
 
     /**

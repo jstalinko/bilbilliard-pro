@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\BilliardTableController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PricingRateController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\UserController;
+use Inertia\Inertia;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\MemberController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PricingRateController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\BilliardTableController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -38,20 +39,36 @@ Route::group([
     Route::group(['prefix' => 'users'], function () {
         Route::get('/', [UserController::class, 'index'])->name('user.show');
         Route::get('/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+        Route::get('/create', [UserController::class, 'create'])->name('user.create');
+        Route::post('/create', [UserController::class, 'store'])->name('user.store');
         Route::post('/{id}/edit', [UserController::class, 'update'])->name('user.update');
         Route::get('/{id}/delete', [UserController::class, 'destroy'])->name('user.destroy');
+    });
+      Route::group(['prefix' => 'members'], function () {
+        Route::get('/', [MemberController::class, 'index'])->name('member.show');
+        Route::get('/{id}/edit', [MemberController::class, 'edit'])->name('member.edit');
+        Route::get('/create', [MemberController::class, 'create'])->name('member.create');
+        Route::post('/create', [MemberController::class, 'store'])->name('member.store');
+        Route::post('/{id}/edit', [MemberController::class, 'update'])->name('member.update');
+        Route::get('/{id}/delete', [MemberController::class, 'destroy'])->name('member.destroy');
     });
 
     Route::group(['prefix' => 'products'], function () {
         Route::get('/', [ProductController::class, 'index'])->name('product.show');
+        Route::get('/create', [ProductController::class,'create'])->name('product.create');
+        Route::post('/create',[ProductController::class, 'store'])->name('product.store');
         Route::get('/{id}/edit', [ProductController::class, 'edit'])->name('product.edit');
         Route::post('/{id}/edit', [ProductController::class, 'update'])->name('product.update');
         Route::get('/{id}/delete', [ProductController::class, 'destroy'])->name('product.destroy');
     });
 
-    Route::group(['prefix' => 'price-rate'] , function(){
-        Route::get('/' , [PricingRateController::class,'index'])->name('pricing-rate.show');
-        
+      Route::group(['prefix' => 'price-rate'], function () {
+        Route::get('/', [PricingRateController::class, 'index'])->name('price-rate.show');
+        Route::get('/create', [PricingRateController::class,'create'])->name('price-rate.create');
+        Route::post('/create',[PricingRateController::class, 'store'])->name('price-rate.store');
+        Route::get('/{id}/edit', [PricingRateController::class, 'edit'])->name('price-rate.edit');
+        Route::post('/{id}/edit', [PricingRateController::class, 'update'])->name('price-rate.update');
+        Route::get('/{id}/delete', [PricingRateController::class, 'destroy'])->name('price-rate.destroy');
     });
 });
 

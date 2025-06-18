@@ -20,9 +20,9 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create():\Inertia\Response
     {
-        //
+        return Inertia::render('products/Form' , ['isEdit' => false, 'product' => null]);
     }
 
     /**
@@ -44,9 +44,10 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(int $id)
     {
-        //
+        $product = Product::find($id);
+        return Inertia::render('products/Form', ['isEdit' => true, 'product' => $product]);
     }
 
     /**
@@ -54,7 +55,19 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $product = Product::find($id);
+       $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'nullable|string',
+            'price' => 'required|numeric',
+            'stock' => 'required|numeric'
+        ]);
+
+        
+           $product->update($validated);
+
+        return redirect()->route('product.show')
+            ->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -62,6 +75,6 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $delete = Product::find($id)->delete();
     }
 }

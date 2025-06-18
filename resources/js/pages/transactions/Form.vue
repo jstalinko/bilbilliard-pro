@@ -1,95 +1,111 @@
 <template>
   <div class="flex p-6 gap-6 bg-background min-h-screen">
     <!-- LEFT TABLE -->
- <!-- LEFT: Table Form Produk -->
-<div class="w-2/3 rounded-2xl border border-border bg-muted/50 shadow-sm p-4 overflow-auto">
-  <div class="flex justify-between items-center mb-4">
-    <h2 class="text-xl font-semibold text-foreground">Daftar Produk</h2>
-    
-      <Sheet>
-    <SheetTrigger as-child>
-      <Button variant="secondary">
-        + Tambah Produk
-      </Button>
-    </SheetTrigger>
-    <SheetContent class="min-w-[600px]" side="left">
-      <SheetHeader>
-        <SheetTitle>Tambahkan Produk</SheetTitle>
-        <SheetDescription>
-          Pilih produk untuk di tambahkan atau cari produk ...
-        </SheetDescription>
-        <br>
-        <Input v-model="searchProduct" placeholder="Ketik nama produk yang ingin anda cari..."/>
-        <Separator class="my-4"/>
-      </SheetHeader>
-      <div class="grid grid-cols-4 gap-2 ">
-            <div class="rounded-xl border bg-muted p-2 shadow hover:bg-slate-800 transition-colors cursor-pointer" v-for="(x,i) in [1,2,3,4,5,6,7,8,9,10]">
-  <img
-    src="https://ui-avatars.com/api/?size=120&name=Es+Teh"
-    alt="Produk"
-    class="w-full h-24 object-cover rounded-md"
-  />
-  <div class="mt-2 text-center text-sm font-semibold text-foreground">
-    ES TEH
-  </div>
-</div>
+    <!-- LEFT: Table Form Produk -->
+    <div class="w-2/3 rounded-2xl border border-border bg-muted/50 shadow-sm p-4 overflow-auto">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold text-foreground">Daftar Produk</h2>
+
+        <Sheet>
+          <SheetTrigger as-child>
+            <Button variant="secondary" class="cursor-pointer">
+              + Tambah Produk
+            </Button>
+          </SheetTrigger>
+          <SheetContent class="min-w-[600px]" side="left">
+            <SheetHeader>
+              <SheetTitle>Tambahkan Produk</SheetTitle>
+              <SheetDescription>
+                Pilih produk untuk di tambahkan atau cari produk ...
+              </SheetDescription>
+              <br>
+              <Input v-model="searchProduct" placeholder="Ketik nama produk yang ingin anda cari..." />
+              <Separator class="my-4" />
+            </SheetHeader>
+            <div class="grid grid-cols-4 gap-2 ">
+              <div class="rounded-xl border bg-muted p-2 shadow hover:bg-slate-800 transition-colors cursor-pointer"
+                v-for="(product, index) in listProducts" :key="index" @click="addProduct(product)">
+                <img :src="'https://ui-avatars.com/api/?size=120&name=' + product.name" alt="Produk"
+                  class="w-full h-24 object-cover rounded-md" />
+                <!-- nama -->
+                <div class="mt-2 text-center text-sm font-semibold text-foreground">
+                  {{ product.name }}
+                </div>
+
+                <!-- harga -->
+                <div class="text-center text-xs text-muted-foreground">
+                  {{ formatRupiah(product.price) }}
+                </div>
+              </div>
+
+            </div>
+            <SheetFooter>
+              <SheetClose as-child>
+                <Button type="submit">
+                  Save changes
+                </Button>
+              </SheetClose>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
 
       </div>
-      <SheetFooter>
-        <SheetClose as-child>
-          <Button type="submit">
-            Save changes
-          </Button>
-        </SheetClose>
-      </SheetFooter>
-    </SheetContent>
-  </Sheet>
 
-  </div>
-
-  <table class="w-full table-auto text-sm text-foreground border-collapse">
-    <thead class="bg-muted text-muted-foreground">
-      <tr>
-        <th class="px-3 py-2 text-left w-1/6">Kode Produk</th>
-        <th class="px-3 py-2 text-left w-2/6">Nama Produk</th>
-        <th class="px-3 py-2 text-left w-1/6">Qty</th>
-        <th class="px-3 py-2 text-left w-2/6">Subtotal</th>
-        <th class="px-3 py-2 text-left w-1/6">Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        v-for="(item, index) in products"
-        :key="index"
-        class="border-t border-border hover:bg-muted/30"
-      >
-        <td class="px-3 py-2">
-          <Input v-model="item.kode" placeholder="Kode" class="h-8" />
-        </td>
-        <td class="px-3 py-2">
-          <Input v-model="item.nama" placeholder="Nama Produk" class="h-8" />
-        </td>
-        <td class="px-3 py-2">
-          <Input v-model.number="item.qty" type="number" class="h-8" />
-        </td>
-        <td class="px-3 py-2">
-          <Input v-model.number="item.subtotal" type="number" class="h-8" />
-        </td>
-        <td class="px-3 py-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            class="text-destructive"
-            @click="removeProduct(index)"
-            title="Hapus Baris"
-          >
-            ❌
-          </Button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+      <table class="w-full table-auto text-sm text-foreground border-collapse">
+        <thead class="bg-muted text-muted-foreground">
+          <tr>
+            <th class="px-3 py-2 text-left w-1/6">Kode Produk</th>
+            <th class="px-3 py-2 text-left w-2/6">Nama Produk</th>
+            <th class="px-3 py-2 text-left w-1/6">@Price</th>
+            <th class="px-3 py-2 text-left w-1/6">Qty</th>
+            <th class="px-3 py-2 text-left w-2/6">Subtotal</th>
+            <th class="px-3 py-2 text-left w-1/6">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in products" :key="index" class="border-t border-border hover:bg-muted/30">
+            <td class="px-3 py-2">
+              <Input v-model="item.kode" placeholder="Kode" class="h-8" />
+            </td>
+            <td class="px-3 py-2">
+              <Input v-model="item.nama" placeholder="Nama Produk" class="h-8" />
+            </td>
+            <td class="px-3 py-2">
+                <span class="h-8 rounded  border-2 p-1">@{{ formatRupiah(item.price) }}</span>
+            </td>
+            <td class="px-3 py-2">
+              <NumberField id="qty" :default-value="1" :min="1" v-model.number="item.qty" @update:model-value="changeQty(item)">
+                <NumberFieldContent>
+                  <NumberFieldDecrement />
+                  <NumberFieldInput />
+                  <NumberFieldIncrement />
+                </NumberFieldContent>
+              </NumberField>
+            </td>
+            <td class="px-3 py-2">
+              <span class="h-8 rounded  border-2 p-1">{{ formatRupiah(item.subtotal) }}</span>
+            </td>
+            <td class="px-3 py-2">
+              <Button variant="ghost" size="icon" class="text-destructive" @click="removeProduct(index)"
+                title="Hapus Baris">
+                ❌
+              </Button>
+            </td>
+          </tr>
+        </tbody>
+        <thead class="border-t-2 p-2">
+          <tr class="px-3 py-2">
+            <td colspan="3"></td>
+            <td>
+              <b>Total Qty</b>: {{ qtyTotal }}
+            </td>
+            <td>
+              <b>Sub-Total</b>: <span class="text-2xl">{{ formatRupiah(subTotal) }}</span>
+            </td>
+          </tr>
+        </thead>
+      </table>
+    </div>
 
 
 
@@ -97,6 +113,7 @@
     <div class="w-1/3 rounded-2xl border border-border bg-muted/50 shadow-sm p-4 space-y-4">
       <h2 class="text-xl font-semibold text-foreground mb-2">Detail Transaksi</h2>
 
+      
       <!-- Select Sesi -->
       <div class="space-y-1">
         <label class="text-sm text-muted-foreground">Sesi Billiard Table</label>
@@ -105,7 +122,9 @@
             <SelectValue placeholder="Pilih sesi..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem v-for="sesi in sessions" :key="sesi" :value="sesi">{{ sesi }}</SelectItem>
+            <SelectItem value="direct">NO-BILLIARD ( RESTO ONLY )</SelectItem>
+            <SelectItem v-for="(sesi, index) in sessions" :key="sesi" :value="sesi">( No. {{ sesi.table_number }} ) -
+              {{ sesi.table_name }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -126,23 +145,42 @@
         </Select>
       </div>
 
-      <!-- Tipe Transaksi -->
-      <div class="flex items-center justify-between">
-        <span class="text-sm text-muted-foreground">Tipe Transaksi: <b>{{ isSession ? 'Session' : 'Direct' }}</b></span>
-        <Switch v-model:checked="isSession" />
-      </div>
-
       <!-- Total Bayar -->
       <div class="space-y-1">
         <label class="text-sm text-muted-foreground">Total Bayar</label>
         <Input v-model="totalBayar" type="number" readonly class="w-full" />
       </div>
 
-      <!-- Jumlah Bayar -->
-      <div class="space-y-1">
-        <label class="text-sm text-muted-foreground">Jumlah Bayar</label>
-        <Input v-model="jumlahBayar" type="number" class="w-full" />
-      </div>
+      <div class="space-y-2">
+    <label class="text-sm text-muted-foreground">Jumlah Bayar</label>
+
+    <!-- Tombol otomatis -->
+    <div class="flex flex-wrap gap-2">
+      <Button class="cursor-pointer" :variant="( jumlahBayar == totalBayar ) ? 'default': 'outline'" @click="jumlahBayar=totalBayar">{{ formatRupiah(totalBayar) }}</Button>
+      <Button
+        v-for="nominal in opsiPembayaran"
+        :key="nominal"
+        :variant="(jumlahBayar == nominal) ? 'default' : 'outline'"
+        @click="jumlahBayar = nominal"
+        class="cursor-pointer"
+      >
+        {{ formatRupiah(nominal) }}
+      </Button>
+
+      <Button variant="secondary" @click="showCustomInput = !showCustomInput">
+        Masukkan Nominal Pembayaran
+      </Button>
+    </div>
+
+    <!-- Input manual -->
+    <div v-if="showCustomInput">
+      <Input v-model.number="jumlahBayar" type="number" class="w-full mt-2" />
+    </div>
+
+    <div class="text-sm text-muted-foreground">
+      Nominal Dipilih: <strong>{{ formatRupiah(jumlahBayar) }}</strong>
+    </div>
+  </div>
 
       <!-- Catatan -->
       <div class="space-y-1">
@@ -150,7 +188,7 @@
         <Textarea v-model="note" placeholder="Tambahkan catatan..." class="w-full" />
       </div>
 
-      <Button class="w-full mt-2" variant="default">Simpan Transaksi</Button>
+      <Button class="w-full mt-2" variant="default" @click="submitTx">Buat transaksi</Button>
     </div>
   </div>
 </template>
@@ -167,7 +205,7 @@ import { Switch } from '@/components/ui/switch'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
-import { ref } from 'vue'
+import { ref, watch , computed } from 'vue'
 import {
   Sheet,
   SheetClose,
@@ -178,26 +216,100 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import {Separator} from '@/components/ui/separator'
+import { Separator } from '@/components/ui/separator'
+import {
+  NumberField,
+  NumberFieldContent,
+  NumberFieldDecrement,
+  NumberFieldIncrement,
+  NumberFieldInput,
+} from '@/components/ui/number-field'
+import { formatRupiah } from '@/lib/utils'
 
 const searchProduct = ref('');
-const products = ref([
-  { kode: '', nama: '', qty: 1, subtotal: 0 }
-])
+const products = ref([])
+const subTotal = ref(0);
+const qtyTotal = ref(0);
+const prop = defineProps({ billiard_sessions: Object, products: Object, action: String });
+const sessions = ref(prop.billiard_sessions);
+const listProducts = ref(prop.products);
+const selectedSession = ref(null)
+const paymentMethod = ref(null)
+const isSession = ref(true)
+const totalBayar = ref(0);
+const jumlahBayar = ref(0)
+const note = ref('')
+const showCustomInput = ref(false)
 
-const addProduct = () => {
-  products.value.push({ kode: '', nama: '', qty: 1, subtotal: 0 })
+// Pecahan uang umum
+const pecahanUmum = [
+  10000, 20000, 50000, 100000,150000,
+  200000,250000, 300000, 350000,500000
+]
+
+// Filter pecahan yang layak ditampilkan
+const opsiPembayaran = computed(() =>
+  pecahanUmum.filter(n => n >= totalBayar.value)
+)
+
+watch(selectedSession,() => {
+  const subTotalProduct = subTotal.value;
+  const billiardTotal = selectedSession.value.total_price;
+  totalBayar.value = (subTotalProduct+billiardTotal);
+
+});
+
+const addProduct = (product) => {
+  const existingProduct = products.value.find(p => p.kode === product.id);
+
+  if (existingProduct) {
+    existingProduct.qty += 1;
+    existingProduct.subtotal = existingProduct.qty * product.price;
+  } else {
+    products.value.push({
+      kode: product.id,
+      nama: product.name,
+      price: product.price,
+      qty: 1,
+      subtotal: product.price
+    });
+  }
+  subTotal.value = products.value.reduce((acc, p) => acc + p.subtotal, 0);
+  qtyTotal.value = products.value.reduce((acc, p) => acc + p.qty, 0);
+}
+const changeQty = (product) => {
+  console.log(product)
+    const existingProduct = products.value.find(p => p.kode == product.kode);
+
+  if (existingProduct) {
+    existingProduct.subtotal = existingProduct.qty * product.price;
+    subTotal.value = products.value.reduce((acc, p) => acc + p.subtotal, 0);
+  qtyTotal.value = products.value.reduce((acc, p) => acc + p.qty, 0);
+  }
 }
 
 const removeProduct = (index) => {
   products.value.splice(index, 1)
 }
 
-const sessions = ['Table 1', 'Table 2', 'Table 3']
-const selectedSession = ref(null)
-const paymentMethod = ref(null)
-const isSession = ref(true)
-const totalBayar = ref(35000)
-const jumlahBayar = ref(0)
-const note = ref('')
+const submitTx = () => {
+
+  /**
+   *    $table->foreignId('session_id')->nullable()->constrained('billiard_sessions')->onDelete('set null');
+            $table->enum('type', ['session', 'direct']);
+            $table->string('payment_method');
+            $table->decimal('paid_amount', 10, 2);
+            $table->decimal('total_amount',10,2);
+            $table->decimal('change', 10, 2)->default(0)
+            ;
+               $table->foreignId('billiard_session_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('transaction_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->integer('quantity')->default(1);
+            $table->decimal('price', 10, 2);
+   */
+   
+
+}
+
 </script>

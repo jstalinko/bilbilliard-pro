@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BilliardSession;
 use Inertia\Inertia;
+use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Models\BilliardSession;
 
 class TransactionController extends Controller
 {
@@ -15,8 +16,8 @@ class TransactionController extends Controller
     public function index(): \Inertia\Response
     {
         $data['transactions'] = Transaction::orderBy('created_at', 'desc')->with('items')->with('session')->get();
-       // dd($data);
-        return Inertia::render('transactions/Index',$data);
+        // dd($data);
+        return Inertia::render('transactions/Index', $data);
     }
 
     /**
@@ -25,16 +26,19 @@ class TransactionController extends Controller
     public function create()
     {
         $data['action'] = 'create';
-        $data['billiard_sessions']=BilliardSession::select([
-    'billiard_sessions.id',
-    'billiard_tables.name as table_name',
-    'billiard_tables.number as table_number'
-])
-->join('billiard_tables', 'billiard_sessions.billiard_table_id', '=', 'billiard_tables.id')
-->where('billiard_sessions.status', 'finished')
-->orderBy('billiard_sessions.id', 'desc')
-->get();
- return Inertia::render('transactions/Form', $data);
+        $data['billiard_sessions'] = BilliardSession::select([
+            'billiard_sessions.id',
+            'billiard_tables.name as table_name',
+            'billiard_tables.number as table_number',
+            '*'
+        ])
+            ->join('billiard_tables', 'billiard_sessions.billiard_table_id', '=', 'billiard_tables.id')
+            ->where('billiard_sessions.status', 'finished')
+            ->orderBy('billiard_sessions.id', 'desc')
+            ->get();
+        $data['products'] = Product::all();
+        
+        return Inertia::render('transactions/Form', $data);
     }
 
     /**

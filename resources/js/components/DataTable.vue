@@ -164,7 +164,7 @@ watch(filterValue, (newValue) => {
           {{ description }}
         </p>
       </div>
-      <Button v-if="addButton" @click="handleAdd" class="flex items-center gap-2">
+      <Button v-if="addButton" @click="handleAdd" class="flex items-center gap-2 cursor-pointer">
         <Plus class="h-4 w-4" />
         {{ addButtonLabel }}
       </Button>
@@ -260,6 +260,7 @@ watch(filterValue, (newValue) => {
   <slot name="actions" :row="row">
     <template v-for="action in actions" :key="action.label">
       <Button
+      class="cursor-pointer"
         size="sm"
         :variant="action.variant === 'destructive' ? 'destructive' : 'default'"
         @click="action.onClick(row)"
