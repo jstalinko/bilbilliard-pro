@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import DataTable from '@/components/DataTable.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { BreadcrumbItem } from '@/types';

@@ -41,6 +41,8 @@ class BilliardTableController extends Controller
     public function create(): \Inertia\Response
     {
         $data['action'] = 'create';
+        $data['billiard'] = null;
+        $data['isEdit'] = false;
         return Inertia::render('billiard/Form', $data);
     }
 
@@ -49,7 +51,19 @@ class BilliardTableController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'number' => 'required|string'
+        ]);
+
+        BilliardTable::create([
+            'name' => $validated['name'],
+            'number'=>$validated['number'],
+            'status' => 'available'
+        ]);
+
+         return redirect()->route('billiard.show')
+            ->with('success', 'Billiard Table created successfully.');
     }
 
     /**
@@ -66,6 +80,7 @@ class BilliardTableController extends Controller
     public function edit(string $id)
     {
         $data['action'] = 'edit';
+        $data['billiard'] = BilliardTable::find($id);
         return Inertia::render('billiard/Form', $data);
     }
 
@@ -82,7 +97,9 @@ class BilliardTableController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        BilliardTable::find($id)->delete();
+         return redirect()->route('billiard.show')
+            ->with('success', 'Billiard table deleted successfully.');
     }
     public function sessionCreate(Request $request): JsonResponse
     {

@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class BilliardTable extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'number',
+        'status'
+    ];
     public function sessions()
     {
         return $this->hasMany(BilliardSession::class);

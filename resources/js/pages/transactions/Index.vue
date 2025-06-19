@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { type BreadcrumbItem , type BilliardSession , type BilliardTable} from '@/types';
 import DataTable from '@/components/DataTable.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -106,6 +106,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
         href: '/dashboard/transactions',
     },
 ];
+const handleAdd = () => router.visit('/dashboard/transactions/create');
 </script>
 
 <template>
@@ -127,6 +128,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
           :filterable="true"
           :filter-label="'Filter Status'"
           :filter-options="filterOptions"
+          @add="handleAdd"
         >
             <template #cell-tx_status="{value}">
                 <Badge :variant="getStatusVariant(value)">{{ value }}</Badge>

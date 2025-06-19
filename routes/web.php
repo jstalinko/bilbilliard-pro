@@ -23,6 +23,8 @@ Route::group([
     Route::get('/billiards/tables', [BilliardTableController::class, 'monitor'])->name('billiard.tables');
     Route::group(['prefix' => 'billiards'], function () {
         Route::get('/', [BilliardTableController::class, 'index'])->name('billiard.show');
+        Route::get('/create', [BilliardTableController::class, 'create'])->name('billiard.create');
+        Route::post('/create',[BilliardTableController::class,'store'])->name('billiard.store');
         Route::get('/{id}/edit', [BilliardTableController::class, 'edit'])->name('billiard.edit');
         Route::post('/{id}/edit', [BilliardTableController::class, 'update'])->name('billiard.update');
         Route::get('/{id}/delete', [BilliardTableController::class, 'destroy'])->name('billiard.destroy');

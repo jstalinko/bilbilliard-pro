@@ -100,7 +100,8 @@ const editTable = (id: number) => {
 };
 
 const deleteTable = (id: number) => {
-  console.log('Delete table:', id);
+  return router.visit('/dashboard/billiards/'+id+'/delete');
+  // console.log('Delete table:', id);
   // Show confirmation dialog then delete
 };
 
