@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Models\PricingRate;
+use App\Models\Transaction;
+use App\Models\WaitingList;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\BilliardTable;
 use App\Models\BilliardSession;
@@ -16,7 +18,7 @@ class BilliardTableController extends Controller
 
     public function monitor(): \Inertia\Response
     {
-        $data['billiardTables'] = BilliardTable::with('session')->orderBy('number','asc')->get();
+        $data['billiardTables'] = BilliardTable::with('session')->orderBy('number', 'asc')->get();
 
         $data['availableTable'] = BilliardTable::where('status', 'available')->count();
         $data['maintenanceTable'] = BilliardTable::where('status', 'maintenance')->count();
@@ -58,11 +60,11 @@ class BilliardTableController extends Controller
 
         BilliardTable::create([
             'name' => $validated['name'],
-            'number'=>$validated['number'],
+            'number' => $validated['number'],
             'status' => 'available'
         ]);
 
-         return redirect()->route('billiard.show')
+        return redirect()->route('billiard.show')
             ->with('success', 'Billiard Table created successfully.');
     }
 
@@ -98,7 +100,7 @@ class BilliardTableController extends Controller
     public function destroy(string $id)
     {
         BilliardTable::find($id)->delete();
-         return redirect()->route('billiard.show')
+        return redirect()->route('billiard.show')
             ->with('success', 'Billiard table deleted successfully.');
     }
     public function sessionCreate(Request $request): JsonResponse
@@ -114,7 +116,7 @@ class BilliardTableController extends Controller
                 JSON_PRETTY_PRINT
             );
         }
-        
+
         $table = BilliardTable::find($request->table_id);
         $table->status = 'occupied';
         $table->save();
@@ -127,7 +129,7 @@ class BilliardTableController extends Controller
         $sestable->status = 'ongoing';
         $sestable->save();
 
-        
+
 
         return response()->json([
             'success' => true,
@@ -165,22 +167,14 @@ $end = Carbon::parse($session->end_time);
 
         $session->end_time = $end_time;
         $durationInHours = $end->floatDiffInHours($start);
-        if($durationInHours < 1) {
-            $durationInHours =1;
+        if ($durationInHours < 1) {
+            $durationInHours = 1;
         }
         $session->total_price = floatval($durationInHours * $session->rate_per_hour);
         $session->status = 'finished';
         $session->save();
 
-        /**
-         *       $table->foreignId('session_id')->nullable()->constrained('billiard_sessions')->onDelete('set null');
-            $table->enum('type', ['session', 'direct']);
-            $table->string('payment_method');
-            $table->decimal('paid_amount', 10, 2);
-            $table->decimal('total_amount',10,2);
-            $table->decimal('change', 10, 2)->default(0);
-            $table->text('note')->nullable();
-         */
+
         $tx = new Transaction();
         $tx->session_id = $session->id;
         $tx->type = 'session';
@@ -209,13 +203,45 @@ $end = Carbon::parse($session->end_time);
     public function updateAll(Request $request)
     {
         $status = $request->status;
-        if(!in_array($status,['available','maintenance']))
-        {
+        if (!in_array($status, ['available', 'maintenance'])) {
             return redirect('/dashboard');
         }
-        BilliardTable::where('status','maintenance')->update(['status' => 'available']);
-        BilliardTable::where('status','occupied')->update(['status' => 'available']);
-        
+        BilliardTable::where('status', 'maintenance')->update(['status' => 'available']);
+        BilliardTable::where('status', 'occupied')->update(['status' => 'available']);
+
         return redirect('/dashboard/billiards/tables');
+    }
+
+
+    public function publicMonitor(Request $request): \Inertia\Response
+    {
+        $show = $request?->show; // today, yesterday, or date range like dd/mm/YYYY-dd/mm/YYYY
+
+        // Parse date range based on $show
+        $waitingListQuery = WaitingList::orderBy('number', 'asc');
+
+        if ($show) {
+            if ($show === 'today') {
+                $waitingListQuery->whereDate('created_at', Carbon::today());
+            } elseif ($show === 'yesterday') {
+                $waitingListQuery->whereDate('created_at', Carbon::yesterday());
+            } elseif (Str::contains($show, '-')) {
+                $range = explode('-', $show);
+                if (count($range) === 2) {
+                    try {
+                        $startDate = Carbon::createFromFormat('d/m/Y', trim($range[0]))->startOfDay();
+                        $endDate = Carbon::createFromFormat('d/m/Y', trim($range[1]))->endOfDay();
+                        $waitingListQuery->whereBetween('created_at', [$startDate, $endDate]);
+                    } catch (\Exception $e) {
+                        // Optionally log or handle invalid date format
+                    }
+                }
+            }
+        }
+
+        $data['billiard_tables'] = BilliardTable::orderBy('number', 'asc')->get();
+        $data['waiting_lists'] = $waitingListQuery->get();
+
+        return Inertia::render('Monitor', $data);
     }
 }

@@ -36,29 +36,103 @@ import { Button } from '@/components/ui/button';
     </section>
 
     <!-- Features Section -->
-    <section id="features" class="bg-[#f9f9f7] dark:bg-[#121212] py-16 px-6 lg:px-20">
-      <h3 class="text-2xl font-semibold text-center mb-12">Fitur Unggulan</h3>
-      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <div class="rounded-xl border p-6 shadow-sm">
-          <h4 class="font-medium text-lg mb-2">Real-time Timer Meja</h4>
-          <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">
-            Lacak durasi permainan otomatis dan akurat untuk setiap meja.
-          </p>
-        </div>
-        <div class="rounded-xl border p-6 shadow-sm">
-          <h4 class="font-medium text-lg mb-2">Transaksi Kasir Cepat</h4>
-          <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">
-            Proses pembayaran mudah untuk sewa meja, makanan & minuman.
-          </p>
-        </div>
-        <div class="rounded-xl border p-6 shadow-sm">
-          <h4 class="font-medium text-lg mb-2">Laporan Harian & Bulanan</h4>
-          <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">
-            Dapatkan ringkasan transaksi, profit, dan aktivitas operasional secara instan.
-          </p>
-        </div>
-      </div>
-    </section>
+<!-- Features Section -->
+<section id="features" class="bg-[#f9f9f7] dark:bg-[#121212] py-16 px-6 lg:px-20">
+  <h3 class="text-2xl font-semibold text-center mb-12">Fitur Unggulan</h3>
+  <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Real-time Timer Billing</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Pantau waktu permainan secara otomatis dengan sistem timer yang akurat dan real-time.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Transaksi Cepat</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Proses pembayaran instan untuk meja, makanan, dan minuman tanpa antre lama.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Cashier Billiard & Resto</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Satu sistem kasir untuk mengelola tagihan billiard dan restoran secara bersamaan.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Sistem Membership Point</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Kumpulkan poin untuk setiap transaksi dan dapatkan keuntungan loyalitas pelanggan.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Pricing Meja Billiard Fleksibel</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Atur tarif berdasarkan jam, hari, atau event khusus dengan mudah.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Cetak Struk</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Struk otomatis untuk setiap transaksi, mendukung transparansi dan profesionalisme.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Bisa Cashier Resto Only</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Gunakan sistem kasir secara terpisah untuk restoran tanpa mengganggu operasional billiard.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Laporan Harian & Bulanan</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Rekap otomatis pendapatan dan aktivitas harian hingga bulanan.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Laporan Perbandingan Harian, Bulanan</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Bandingkan performa operasional antar periode untuk analisis bisnis yang lebih tajam.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Multi User Admin</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Kelola akses admin lebih dari satu pengguna dengan hak akses yang bisa diatur.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Unlimited Table Billiard</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Tambahkan sebanyak mungkin meja tanpa batas dalam sistem billing Anda.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Transaksi Transparan</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Setiap transaksi terekam secara jelas untuk meminimalisir kesalahan dan kecurangan.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Management Produk</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Kelola daftar makanan, minuman, dan produk lainnya dengan mudah.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Management Meja Billiard</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Atur status, nomor, dan ketersediaan meja billiard secara real-time.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Management Member</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Simpan data pelanggan, histori kunjungan, dan status keanggotaan dengan rapi.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Management Price Rate</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Sesuaikan tarif berdasarkan waktu, jenis meja, dan kategori pelanggan.</p>
+    </div>
+
+    <div class="rounded-xl border p-6 shadow-sm">
+      <h4 class="font-medium text-lg mb-2">Support Online & Offline</h4>
+      <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Gunakan sistem kapan pun, baik terhubung internet maupun saat offline.</p>
+    </div>
+    <div class="rounded-xl border p-6 shadow-sm">
+  <h4 class="font-medium text-lg mb-2">Sistem Waiting List</h4>
+  <p class="text-sm text-[#5c5c59] dark:text-[#A1A09A]">Fitur antrean otomatis saat semua meja penuh, pelanggan dapat mendaftar dan menunggu giliran dengan notifikasi giliran main.</p>
+</div>
+
+  </div>
+</section>
+
 
     <!-- CTA Section -->
     <section class="text-center py-20 px-6 bg-[#fdfbf3] dark:bg-[#1c1c1a]">

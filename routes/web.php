@@ -9,11 +9,13 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PricingRateController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\WaitingListController;
 use App\Http\Controllers\BilliardTableController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
+Route::get('/monitor' , [BilliardTableController::class , 'publicMonitor'])->name('billiard.public-monitor');
 
 Route::group([
     'prefix' => 'dashboard',
@@ -71,6 +73,14 @@ Route::group([
         Route::get('/{id}/edit', [PricingRateController::class, 'edit'])->name('price-rate.edit');
         Route::post('/{id}/edit', [PricingRateController::class, 'update'])->name('price-rate.update');
         Route::get('/{id}/delete', [PricingRateController::class, 'destroy'])->name('price-rate.destroy');
+    });
+      Route::group(['prefix' => 'waitinglist'], function () {
+        Route::get('/', [WaitingListController::class, 'index'])->name('waitinglist.show');
+        Route::get('/create', [WaitingListController::class,'create'])->name('waitinglist.create');
+        Route::post('/create',[WaitingListController::class, 'store'])->name('waitinglist.store');
+        Route::get('/{id}/edit', [WaitingListController::class, 'edit'])->name('waitinglist.edit');
+        Route::post('/{id}/edit', [WaitingListController::class, 'update'])->name('waitinglist.update');
+        Route::get('/{id}/delete', [WaitingListController::class, 'destroy'])->name('waitinglist.destroy');
     });
 });
 

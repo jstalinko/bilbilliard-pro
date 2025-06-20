@@ -16,7 +16,9 @@ import {
   CircleIcon,
   CircleDotIcon,
   CircleCheckBigIcon,
-  PlusCircleIcon
+  PlusCircleIcon,
+  MonitorIcon,
+  ListIcon
 } from 'lucide-vue-next';
 import Button from '@/components/ui/button/Button.vue';
 import { formatRupiah } from '@/lib/utils';
@@ -218,23 +220,43 @@ const formatCurrency = (amount: number): string => {
 
       <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
         <div >
-          <Link href="/dashboard/billiards/update-all-tables?status=available">
-          <Button class="cursor-pointer">
-            <RefreshCcwDotIcon class="h-24 w-24"/> Update available all billiard tables
-          </Button>
-        </Link>
-          &nbsp;
-          <Link href="/dashboard/members/create">
-          <Button class=" cursor-pointer ">
-            <UsersIcon class="h-24 w-24"/> Tambah member
-          </Button>
-        </Link>
-          &nbsp;
-          <Link href="/dashboard/transactions/create">
-          <Button class="cursor-pointer">
-            <PlusCircleIcon class="h-24 w-24"/> Transaksi Baru
-          </Button>
-        </Link>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+  <Link href="/dashboard/billiards/update-all-tables?status=available">
+    <div class="w-40 h-40 border bg-slate-500 rounded-xl shadow-md hover:shadow-lg hover:bg-slate-600 transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center p-4">
+      <RefreshCcwDotIcon class="w-10 h-10 mb-2 text-gray-100" />
+      <span class="text-sm font-medium text-gray-100">Update all billiard tables</span>
+    </div>
+  </Link>
+
+  <Link href="/dashboard/members/create">
+    <div class="w-40 h-40 border bg-slate-500 rounded-xl shadow-md hover:shadow-lg hover:bg-slate-600 transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center p-4">
+      <UsersIcon class="h-10 w-10 mb-2 text-gray-100" />
+      <span class="text-sm font-medium text-gray-100">Tambah member</span>
+    </div>
+  </Link>
+
+  <Link href="/dashboard/waitinglist/create">
+    <div class="w-40 h-40 border bg-slate-500 rounded-xl shadow-md hover:shadow-lg hover:bg-slate-600 transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center p-4">
+      <ListIcon class="h-10 w-10 mb-2 text-gray-100" />
+      <span class="text-sm font-medium text-gray-100">Tambah Waiting List</span>
+    </div>
+  </Link>
+
+  <Link href="/dashboard/transactions/create">
+    <div class="w-40 h-40 border bg-slate-500 rounded-xl shadow-md hover:shadow-lg hover:bg-slate-600 transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center p-4">
+      <PlusCircleIcon class="h-10 w-10 mb-2 text-gray-100" />
+      <span class="text-sm font-medium text-gray-100">Transaksi Baru</span>
+    </div>
+  </Link>
+
+  <Link href="/monitor?show=today">
+    <div class="w-40 h-40 border bg-slate-500 rounded-xl shadow-md hover:shadow-lg hover:bg-slate-600 transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center p-4">
+      <MonitorIcon class="h-10 w-10 mb-2 text-gray-100" />
+      <span class="text-sm font-medium text-gray-100">Display WL</span>
+    </div>
+  </Link>
+</div>
+
         </div>
         <div>
           
