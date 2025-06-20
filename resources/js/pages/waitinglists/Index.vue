@@ -4,7 +4,8 @@ import { router, useForm , Head } from '@inertiajs/vue3';
 import DataTable, { type TableColumn, type TableAction, type FilterOption } from '@/components/DataTable.vue';
 import { BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Button } from '@/components/ui/button';
+import { Select,SelectContent,SelectItem,SelectValue,SelectTrigger } from '@/components/ui/select';
+import { dateTimeIndonesia } from '@/lib/utils';
 import { 
     AlertDialog, 
     AlertDialogAction, 
@@ -48,6 +49,16 @@ const columns: TableColumn<WaitingEntry>[] = [
         label: 'Status',
         width: '120px',
     },
+    {
+        key:'created_at',
+        label:'Created Date',
+        
+    },
+    {
+        key:'updated_at',
+        label:'Updated Date',
+        
+    }
 ];
 
 // Table actions
@@ -99,6 +110,21 @@ const breadcrumbItems: BreadcrumbItem[] = [
         href: '/dashboard/waitinglist',
     },
 ];
+const updateStatus = (id: number, newStatus: WaitingEntry['status'] | null | any) => {
+  const form = useForm({
+    status: newStatus,
+  });
+
+  form.post(`/dashboard/billiards/${id}/update-status`, {
+    preserveScroll: true,
+    onSuccess: () => {
+      // Optional: Add toast or feedback here
+    },
+    onError: () => {
+      // Optional: handle error
+    }
+  });
+};
 </script>
 
 <template>
@@ -119,7 +145,31 @@ const breadcrumbItems: BreadcrumbItem[] = [
                 add-button-label="Add Entry"
                 :caption="`Total entries: ${Object.values(waitinglists).length}`" 
                 empty-message="No waiting entries found."
-            />
+            >
+            
+                <template #cell-status="{ value, row }">
+  <Select
+    :model-value="value"
+    @update:modelValue="(newStatus) => updateStatus(row.id, newStatus)"
+  >
+    <SelectTrigger class="w-[140px]">
+      <SelectValue />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="waiting">Waiting</SelectItem>
+      <SelectItem value="played">Played</SelectItem>
+      <SelectItem value="cancel">Cancel</SelectItem>
+    </SelectContent>
+  </Select>
+</template>
+<template #cell-created_at="{value,row}">
+    <span>{{ dateTimeIndonesia(value) }}</span>
+</template>
+<template #cell-updated_at="{value,row}">
+    <span>{{ dateTimeIndonesia(value) }}</span>
+</template>
+            
+            </DataTable>
         </div>
 
         <!-- Delete Confirmation Dialog -->

@@ -1,11 +1,11 @@
 <!-- BilliardTables.vue -->
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Head, router } from '@inertiajs/vue3';
+import { Head, router , useForm} from '@inertiajs/vue3';
 import { type BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
 import DataTable, { type TableColumn, type TableAction, type FilterOption } from '@/components/DataTable.vue';
-import { Badge } from '@/components/ui/badge';
+import { Select , SelectContent,SelectTrigger,SelectValue,SelectItem } from '@/components/ui/select';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -116,6 +116,21 @@ const handleFilter = (value: string) => {
   console.log('Filter value:', value);
   // You can add custom filter logic here if needed
 };
+const updateStatus = (id: number, newStatus: BilliardTable['status'] | null | any) => {
+  const form = useForm({
+    status: newStatus,
+  });
+
+  form.post(`/dashboard/billiards/${id}/update-status`, {
+    preserveScroll: true,
+    onSuccess: () => {
+      // Optional: Add toast or feedback here
+    },
+    onError: () => {
+      // Optional: handle error
+    }
+  });
+};
 </script>
 
 <template>
@@ -141,12 +156,28 @@ const handleFilter = (value: string) => {
           @add="addTable"
           @filter="handleFilter"
         >
-          <!-- Custom status badge -->
-          <template #cell-status="{ value }">
-            <Badge :variant="getStatusVariant(value)">
-              {{ value }}
-            </Badge>
-          </template>
+         <template #cell-status="{ value, row }">
+  <Select 
+    :model-value="value"
+    @update:modelValue="(newStatus) => updateStatus(row.id, newStatus)"
+  >
+    <SelectTrigger
+  :class="`w-[120px] border-1 ${
+    value === 'available' ? 'border-green-500' :
+    value === 'maintenance' ? 'border-yellow-500' :
+    'border-red-500'
+  }`"
+>
+      <SelectValue />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="available">Available</SelectItem>
+      <SelectItem value="occupied">Occupied</SelectItem>
+      <SelectItem value="maintenance">Maintenance</SelectItem>
+    </SelectContent>
+  </Select>
+</template>
+
         </DataTable>
        </div>
     </AppLayout>
