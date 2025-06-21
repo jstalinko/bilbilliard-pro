@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\Helper\Helper;
+use App\Helper;
 use App\Models\Member;
 use App\Models\Product;
 use App\Models\Transaction;
