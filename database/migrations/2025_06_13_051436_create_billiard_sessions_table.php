@@ -18,7 +18,7 @@ return new class extends Migration
             $table->dateTime('end_time')->nullable();
             $table->decimal('rate_per_hour', 10, 2);
             $table->decimal('total_price', 10, 2)->nullable();
-            $table->enum('status', ['ongoing', 'finished'])->default('ongoing');
+            $table->enum('status', ['ongoing', 'finished','complete'])->default('ongoing');
             $table->timestamps();
         });
     }

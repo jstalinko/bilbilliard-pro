@@ -115,7 +115,7 @@ const updateStatus = (id: number, newStatus: WaitingEntry['status'] | null | any
     status: newStatus,
   });
 
-  form.post(`/dashboard/billiards/${id}/update-status`, {
+  form.post(`/dashboard/waitinglist/${id}/update-status`, {
     preserveScroll: true,
     onSuccess: () => {
       // Optional: Add toast or feedback here

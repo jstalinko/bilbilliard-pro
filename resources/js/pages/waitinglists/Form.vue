@@ -33,7 +33,7 @@ const submitLabel = computed(() => props.isEdit ? 'Update waitinglist' : 'Create
 const breadcrumbItems: BreadcrumbItem[] = [
     {
         title: 'Waiting List',
-        href: '/dashboard/waiting-list',
+        href: '/dashboard/waitinglist',
     },
     {
         title: pageTitle.value,
@@ -43,13 +43,13 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 const submit = () => {
     if (props.isEdit && props.waitinglist) {
-        form.post(`/dashboard/waiting-list/${props.waitinglist.id}/edit`, {
+        form.post(`/dashboard/waitinglist/${props.waitinglist.id}/edit`, {
             onSuccess: () => {
                 // Success handled by redirect
             },
         });
     } else {
-        form.post('/dashboard/waiting-list/create', {
+        form.post('/dashboard/waitinglist/create', {
             onSuccess: () => {
                 form.reset();
             },

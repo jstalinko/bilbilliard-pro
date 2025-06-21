@@ -113,7 +113,17 @@
     <div class="w-1/3 rounded-2xl border border-border bg-muted/50 shadow-sm p-4 space-y-4">
       <h2 class="text-xl font-semibold text-foreground mb-2">Detail Transaksi</h2>
 
-      
+      <div class="space-y-1">
+        <label for="member" class="text-sm text-muted-foreground">Member (opsional)</label>
+        <Select v-model="member_id">
+          <SelectTrigger class="w-full">
+            <SelectValue placeholder="Ada member?"/>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem v-for="(mem,idx) in members" :key="idx" :value="mem.id" >{{ mem.phone }} - {{ mem.full_name }}</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
       <!-- Select Sesi -->
       <div class="space-y-1">
         <label class="text-sm text-muted-foreground">Sesi Billiard Table</label>
@@ -123,7 +133,7 @@
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="direct">NO-BILLIARD ( RESTO ONLY )</SelectItem>
-            <SelectItem v-for="(sesi, index) in sessions" :key="sesi" :value="sesi">( No. {{ sesi.table_number }} ) -
+            <SelectItem v-for="(sesi, index) in sessions" :key="index" :value="sesi" >( No. {{ sesi.table_number }} ) -
               {{ sesi.table_name }}</SelectItem>
           </SelectContent>
         </Select>
@@ -193,7 +203,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   Select,
   SelectTrigger,
@@ -205,7 +215,7 @@ import { Switch } from '@/components/ui/switch'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
-import { ref, watch , computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import {
   Sheet,
   SheetClose,
@@ -226,45 +236,93 @@ import {
 } from '@/components/ui/number-field'
 import { formatRupiah } from '@/lib/utils'
 
-const searchProduct = ref('');
-const products = ref([])
-const subTotal = ref(0);
-const qtyTotal = ref(0);
-const prop = defineProps({ billiard_sessions: Object, products: Object, action: String });
-const sessions = ref(prop.billiard_sessions);
-const listProducts = ref(prop.products);
-const selectedSession = ref(null)
-const paymentMethod = ref(null)
-const isSession = ref(true)
-const totalBayar = ref(0);
-const jumlahBayar = ref(0)
-const note = ref('')
-const showCustomInput = ref(false)
+// 🧾 Define interfaces
+interface ProductItem {
+  kode: string
+  nama: string
+  price: number
+  qty: number
+  subtotal: number
+}
 
-// Pecahan uang umum
-const pecahanUmum = [
-  10000, 20000, 50000, 100000,150000,
-  200000,250000, 300000, 350000,500000
+interface BilliardSession {
+  session_id: number
+  table_number: string
+  table_name: string
+  total_price: number
+}
+
+interface PropProduct {
+  id: string
+  name: string
+  price: number
+}
+
+interface TransactionItem {
+  kode: string
+  qty: number
+  price: number
+}
+
+interface Transaction {
+  id: number
+  session_id: number
+}
+
+interface Props {
+  billiard_sessions: BilliardSession[]
+  products: PropProduct[]
+  action: string
+  members: any
+  tx: Transaction | null
+}
+
+// 🎯 Define props and refs
+const prop = defineProps<Props>()
+
+const searchProduct = ref<string>('')
+const products = ref<ProductItem[]>([])
+const subTotal = ref<number>(0)
+const qtyTotal = ref<number>(0)
+const sessions = ref<BilliardSession[]>(prop.billiard_sessions)
+const listProducts = ref<PropProduct[]>(prop.products)
+const selectedSession = ref<BilliardSession | 'direct' | null>(null)
+const paymentMethod = ref<string | null>(null)
+const isSession = ref<boolean>(true)
+const totalBayar = ref<number>(0)
+const jumlahBayar = ref<number>(0)
+const note = ref<string>('')
+const showCustomInput = ref<boolean>(false)
+const member_id = ref<number | null>(null)
+
+// 💵 Pecahan uang umum
+const pecahanUmum: number[] = [
+  10000, 20000, 50000, 100000, 150000,
+  200000, 250000, 300000, 350000, 500000
 ]
 
-// Filter pecahan yang layak ditampilkan
 const opsiPembayaran = computed(() =>
   pecahanUmum.filter(n => n >= totalBayar.value)
 )
 
-watch(selectedSession,() => {
-  const subTotalProduct = subTotal.value;
-  const billiardTotal = selectedSession.value.total_price;
-  totalBayar.value = (subTotalProduct+billiardTotal);
+// 📊 Recalculate totalBayar when session is selected
+watch(selectedSession, () => {
+  if (selectedSession.value !== null && selectedSession.value !== 'direct') {
+    const subTotalProduct = subTotal.value
+    const billiardTotal = (selectedSession.value as BilliardSession).total_price
+    totalBayar.value = subTotalProduct + billiardTotal
+  } else {
+    totalBayar.value = subTotal.value
+  }
+})
 
-});
-
-const addProduct = (product) => {
-  const existingProduct = products.value.find(p => p.kode === product.id);
+// 🛒 Add product
+const addProduct = (product: PropProduct) => {
+  const existingProduct = products.value.find(p => p.kode === product.id)
 
   if (existingProduct) {
-    existingProduct.qty += 1;
-    existingProduct.subtotal = existingProduct.qty * product.price;
+    existingProduct.qty += 1
+    existingProduct.subtotal = existingProduct.qty * product.price
   } else {
     products.value.push({
       kode: product.id,
@@ -272,44 +330,78 @@ const addProduct = (product) => {
       price: product.price,
       qty: 1,
       subtotal: product.price
-    });
+    })
   }
-  subTotal.value = products.value.reduce((acc, p) => acc + p.subtotal, 0);
-  qtyTotal.value = products.value.reduce((acc, p) => acc + p.qty, 0);
-}
-const changeQty = (product) => {
-  console.log(product)
-    const existingProduct = products.value.find(p => p.kode == product.kode);
 
+  updateTotals()
+}
+
+// 🔁 Change quantity
+const changeQty = (product: ProductItem) => {
+  const existingProduct = products.value.find(p => p.kode === product.kode)
   if (existingProduct) {
-    existingProduct.subtotal = existingProduct.qty * product.price;
-    subTotal.value = products.value.reduce((acc, p) => acc + p.subtotal, 0);
-  qtyTotal.value = products.value.reduce((acc, p) => acc + p.qty, 0);
+    existingProduct.subtotal = existingProduct.qty * product.price
+    updateTotals()
   }
 }
 
-const removeProduct = (index) => {
+// ❌ Remove product
+const removeProduct = (index: number) => {
   products.value.splice(index, 1)
+  updateTotals()
 }
 
-const submitTx = () => {
+// 🔄 Update subtotal & totalBayar
+const updateTotals = () => {
+  subTotal.value = products.value.reduce((acc, p) => acc + p.subtotal, 0)
+  qtyTotal.value = products.value.reduce((acc, p) => acc + p.qty, 0)
 
-  /**
-   *    $table->foreignId('session_id')->nullable()->constrained('billiard_sessions')->onDelete('set null');
-            $table->enum('type', ['session', 'direct']);
-            $table->string('payment_method');
-            $table->decimal('paid_amount', 10, 2);
-            $table->decimal('total_amount',10,2);
-            $table->decimal('change', 10, 2)->default(0)
-            ;
-               $table->foreignId('billiard_session_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('transaction_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->integer('quantity')->default(1);
-            $table->decimal('price', 10, 2);
-   */
-   
+  let billiardBayar = 0
+  if (selectedSession.value !== null && selectedSession.value !== 'direct') {
+    billiardBayar = (selectedSession.value as BilliardSession).total_price
+  }
 
+  totalBayar.value = subTotal.value + billiardBayar
 }
 
+// 💾 Submit transaction
+const submitTx = async () => {
+  const transaction_items = products.value
+  const billiard_sessions = selectedSession.value
+
+  const payload = {
+    transaction_items,
+    billiard_sessions,
+    tx_id: prop.tx?.id ?? null,
+    session_id: prop.tx?.session_id ?? null,
+    payment_method: paymentMethod.value,
+    total_bayar: totalBayar.value,
+    jumlah_bayar: jumlahBayar.value,
+    member_id: member_id.value,
+    note: note.value
+  }
+
+  const resp = await fetch('/api/transaction/create', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authentication': 'Bearer '
+    },
+    body: JSON.stringify(payload)
+  })
+
+  const result = await resp.json()
+  console.log(result)
+}
+
+// 🔃 Prefill session if transaction exists
+onMounted(() => {
+  if (prop.tx != null) {
+    const foundSession = sessions.value.find(sesi => sesi.session_id === prop.tx?.session_id)
+    if (foundSession) {
+      selectedSession.value = foundSession
+    }
+  }
+})
 </script>
+

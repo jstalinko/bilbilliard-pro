@@ -12,7 +12,6 @@ import { Button } from '@/components/ui/button';
       <h1 class="text-xl font-bold">bilbilliard-pro</h1>
       <div class="flex gap-4">
         <Button variant="ghost" as="a" href="/login">Login</Button>
-        <Button variant="outline" as="a" href="/register">Register</Button>
       </div>
     </header>
 
@@ -26,7 +25,7 @@ import { Button } from '@/components/ui/button';
           bilbilliard-pro membantu Anda mengelola meja, waktu bermain, transaksi, dan stok dengan cepat dan efisien.
         </p>
         <div class="flex flex-wrap gap-3">
-          <Button as="a" href="/register">Coba Gratis</Button>
+          <Button as="a" href="https://javaradigital.com/product/bilbilliard-pro-billiard-billing-system-point-of-sales" target="_blank">Dapatkan Sekarang</Button>
           <Button variant="outline" as="a" href="#features">Lihat Fitur</Button>
         </div>
       </div>

@@ -81,6 +81,8 @@ Route::group([
         Route::get('/{id}/edit', [WaitingListController::class, 'edit'])->name('waitinglist.edit');
         Route::post('/{id}/edit', [WaitingListController::class, 'update'])->name('waitinglist.update');
         Route::get('/{id}/delete', [WaitingListController::class, 'destroy'])->name('waitinglist.destroy');
+        Route::post('/{id}/update-status', [WaitingListController::class, 'updateStatus'])->name('waitinglist.update-status');
+
     });
 });
 

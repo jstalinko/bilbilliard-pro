@@ -29,19 +29,21 @@ class PricingRateController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
-    }
+ public function store(Request $request)
+{
+    
+    // $validated = $request->validate([
+    //     'name' => 'required|string|max:255',
+    //     'price_per_hour' => 'required|numeric|min:0',
+    // ]);
+  
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+    PricingRate::create($request->all());
 
+    return redirect()->route('price-rate.show')->with('success', 'Pricing rate berhasil ditambahkan.');
+}
+
+  
     /**
      * Show the form for editing the specified resource.
      */
@@ -54,16 +56,30 @@ class PricingRateController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+   public function update(Request $request, string $id)
+{
+    dd($request);
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'price_per_hour' => 'required|numeric|min:0',
+        'start_at' => 'nullable|date_format:H:i',
+        'end_at' => 'nullable|date_format:H:i',
+    ]);
+
+    $rate = PricingRate::findOrFail($id);
+    $rate->update($validated);
+
+    return redirect()->route('price-rate.show')->with('success', 'Pricing rate berhasil diperbarui.');
+}
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
-    {
-        //
-    }
+{
+    $rate = PricingRate::findOrFail($id);
+    $rate->delete();
+
+    return redirect()->route('price-rate.show')->with('success', 'Pricing rate berhasil dihapus.');
+}
 }

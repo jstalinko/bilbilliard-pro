@@ -3,6 +3,8 @@ import { Head, router } from '@inertiajs/vue3';
 import DataTable ,{type TableColumn,type TableAction} from '@/components/DataTable.vue';
 import { type BreadcrumbItem  } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
+import {Badge} from '@/components/ui/badge';
+import {formatRupiah} from '@/lib/utils';
 
 
 const breadcrumbItems: BreadcrumbItem[] = [
@@ -72,7 +74,9 @@ const handleAdd = () => {
                 search-placeholder="Search Price rate..."  :add-button="true" add-button-label="Add Rate"
                 @add="handleAdd"
                 :caption="`Total pricingrates: ${Object.values(pricingrates).length}`" empty-message="No pricingrates found.">
-              
+              <template #cell-price_per_hour="{value,row}">
+                <Badge>{{ formatRupiah(value) }}</Badge>
+              </template>
             </DataTable>
         </div>
     </AppLayout>

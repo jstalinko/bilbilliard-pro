@@ -255,6 +255,13 @@ const formatCurrency = (amount: number): string => {
       <span class="text-sm font-medium text-gray-100">Display WL</span>
     </div>
   </Link>
+    <Link href="/dashboard/billiards/tables">
+    <div class="w-40 h-40 border bg-slate-500 rounded-xl shadow-md hover:shadow-lg hover:bg-slate-600 transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center p-4">
+      <TableIcon class="h-10 w-10 mb-2 text-gray-100" />
+      <span class="text-sm font-medium text-gray-100">Display Tables</span>
+    </div>
+  </Link>
+  
 </div>
 
         </div>

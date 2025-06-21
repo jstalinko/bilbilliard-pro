@@ -3,6 +3,7 @@ import { Head, router } from '@inertiajs/vue3';
 import DataTable ,{type TableColumn,type TableAction} from '@/components/DataTable.vue';
 import { type BreadcrumbItem  } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
+import {formatRupiah} from '@/lib/utils';
 
 
 const breadcrumbItems: BreadcrumbItem[] = [
@@ -71,7 +72,9 @@ const handleAdd = () => {
                 search-placeholder="Search products..."  :add-button="true" add-button-label="Add Product"
                 @add="handleAdd"
                 :caption="`Total products: ${Object.values(products).length}`" empty-message="No products found.">
-              
+              <template #cell-price="{value,row}">
+                {{ formatRupiah(value) }}
+              </template>
             </DataTable>
         </div>
     </AppLayout>

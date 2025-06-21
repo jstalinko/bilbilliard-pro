@@ -18,7 +18,7 @@ class BilliardTableController extends Controller
 
     public function monitor(): \Inertia\Response
     {
-        $data['billiardTables'] = BilliardTable::with('session')->orderBy('number', 'asc')->get();
+        $data['billiardTables'] = BilliardTable::with('session')->get();
 
         $data['availableTable'] = BilliardTable::where('status', 'available')->count();
         $data['maintenanceTable'] = BilliardTable::where('status', 'maintenance')->count();
@@ -153,18 +153,13 @@ class BilliardTableController extends Controller
         $table->save();
 
 
-        /** JIKA ADA TANGGAL.
-         * $start = Carbon::parse($session->start_time);
-$end = Carbon::parse($session->end_time);
-         */
+        
+         
 
         $end_time = Carbon::now()->format('Y-m-d H:i:s');
-        $start = Carbon::createFromTimeString($session->start_time);
-        $end = Carbon::createFromTimeString($end_time);
-        if ($end->lessThan($start)) {
-            $end->addDay();
-        }
-
+        $start = Carbon::parse($session->start_time);
+        $end = Carbon::parse($session->end_time);
+       
         $session->end_time = $end_time;
         $durationInHours = $end->floatDiffInHours($start);
         if ($durationInHours < 1) {
@@ -187,7 +182,7 @@ $end = Carbon::parse($session->end_time);
         $tx->save();
 
         if ($request->action == 'continue') {
-            $redirect_url = url('/dashboard/transactions/create');
+            $redirect_url = url('/dashboard/transactions/create?tx_id='.$tx->id.'&session_id='.$session->id);
         } else {
             $redirect_url = url('/dashboard/billiards/tables');
         }
