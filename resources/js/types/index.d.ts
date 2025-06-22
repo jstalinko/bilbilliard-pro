@@ -105,3 +105,24 @@ export interface JsonResponse{
   message?:string;
    data?: Record<string, any>[] | Record<string, any> | any;
 }
+export interface Product {
+  id: number;
+  name: string;
+  category?: string | null;
+  price: number;
+  stock?: number | null;
+}
+
+export interface TransactionItem {
+  id: number;
+  billiard_session_id?: number | null;
+  transaction_id?: number | null;
+  product_id: number;
+  quantity: number;
+  price: number;
+
+  // Relasi
+  product?: Product;
+  billiard_session?: BilliardSession | null;
+  transaction?: Transaction | null;
+}

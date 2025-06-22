@@ -18,7 +18,7 @@ class TransactionController extends Controller
      */
     public function index(): \Inertia\Response
     {
-        $data['transactions'] = Transaction::orderBy('created_at', 'desc')->with('items')->with('session')->get();
+        $data['transactions'] = Transaction::orderBy('created_at', 'desc')->with('items.product')->with('session.table')->get();
         // dd($data);
         return Inertia::render('transactions/Index', $data);
     }
@@ -153,7 +153,12 @@ class TransactionController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Transaction saved successfully.',
-            'transaction_id' => $tx->id
+            'transaction_id' => $tx->id,
+            'data' => [
+                'paid_amount' => $jml_bayar,
+                'total_amount' => $total_bayar,
+                'change' => $change 
+            ]
         ]);
     }
 }

@@ -31,3 +31,10 @@ export function dateTimeIndonesia(dateInput: string | Date): string {
     minute: '2-digit',
   });
 }
+
+export function diffHourDuration(start: string, end: string): number {
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  const diffInMs = endDate.getTime() - startDate.getTime();
+  return Math.round(diffInMs / (1000 * 60 * 60)); // Convert milliseconds to hours
+}

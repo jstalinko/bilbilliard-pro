@@ -150,7 +150,7 @@ class BilliardTableController extends Controller
 
         $table = BilliardTable::find($table_id);
         $table->status = 'available';
-        $table->save();
+      //  $table->save();
 
 
         
@@ -158,14 +158,14 @@ class BilliardTableController extends Controller
 
         $end_time = Carbon::now()->format('Y-m-d H:i:s');
         $start = Carbon::parse($session->start_time);
-        $end = Carbon::parse($session->end_time);
+        $end = Carbon::parse($end_time);
        
         $session->end_time = $end_time;
-        $durationInHours = $end->floatDiffInHours($start);
+        $durationInHours = $end->diffInHours($start,true);
         if ($durationInHours < 1) {
             $durationInHours = 1;
         }
-        $session->total_price = floatval($durationInHours * $session->rate_per_hour);
+        $session->total_price = floatval(round($durationInHours) * $session->rate_per_hour);
         $session->status = 'finished';
         $session->save();
 
@@ -177,7 +177,7 @@ class BilliardTableController extends Controller
         $tx->paid_amount = floatval($durationInHours * $session->rate_per_hour);
         $tx->total_amount = 0;
         $tx->change = 0;
-        $tx->note = 'Pending transactions';
+        $tx->note = 'Close session billiard table '.$table->number;
         $tx->tx_status = 'pending';
         $tx->save();
 
@@ -238,5 +238,15 @@ class BilliardTableController extends Controller
         $data['waiting_lists'] = $waitingListQuery->get();
 
         return Inertia::render('Monitor', $data);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $id = $request->id;
+        $billiard = BilliardTable::find($id);
+        $billiard->status = $request->status;
+        $billiard->save();
+
+        return redirect()->route('billiard.show')->with('success','Updated status successfully');
     }
 }

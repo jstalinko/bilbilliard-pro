@@ -200,10 +200,30 @@
 
       <Button class="w-full mt-2" variant="default" @click="submitTx">Buat transaksi</Button>
     </div>
+     <AlertDialog v-model:open="openDialog">
+    <AlertDialogTrigger as-child>
+      <!-- This trigger is optional since you’re opening via JS -->
+      <span></span>
+    </AlertDialogTrigger>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>{{ dialogContent.title }}</AlertDialogTitle>
+        <AlertDialogDescription>
+          {{ dialogContent.desc }}
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Close</AlertDialogCancel>
+        <!-- Optionally handle OK button -->
+        <AlertDialogAction @click="openDialog = false">OK</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
   </div>
 </template>
 
 <script setup lang="ts">
+import { AlertDialog,AlertDialogAction,AlertDialogCancel,AlertDialogContent,AlertDialogTrigger,AlertDialogHeader,AlertDialogFooter,AlertDialogDescription,AlertDialogTitle } from '@/components/ui/alert-dialog'
 import {
   Select,
   SelectTrigger,
@@ -276,6 +296,10 @@ interface Props {
   members: any
   tx: Transaction | null
 }
+interface dialogContent{
+  title: string;
+  desc: string;
+}
 
 // 🎯 Define props and refs
 const prop = defineProps<Props>()
@@ -294,6 +318,9 @@ const jumlahBayar = ref<number>(0)
 const note = ref<string>('')
 const showCustomInput = ref<boolean>(false)
 const member_id = ref<number | null>(null)
+
+const openDialog = ref<boolean>(false)
+const dialogContent = ref<dialogContent>([]);
 
 // 💵 Pecahan uang umum
 const pecahanUmum: number[] = [
@@ -391,7 +418,16 @@ const submitTx = async () => {
   })
 
   const result = await resp.json()
-  console.log(result)
+  if(result.success)
+  {
+    openDialog.value = true;
+    dialogContent.value.title = 'Transaction Successfully~';
+    dialogContent.value.desc = `Transaksi berhasil dengan pembayaran ${formatRupiah(result.data.total_amount)} dan kembalian ${formatRupiah(result.data.change)} `;
+  }else{
+    openDialog.value = true;
+    dialogContent.value.title = 'Transaction failed';
+    dialogContent.value.desc = 'Please refresh page and try again~';
+  }
 }
 
 // 🔃 Prefill session if transaction exists

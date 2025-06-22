@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PrintController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\DashboardController;
@@ -31,6 +32,7 @@ Route::group([
         Route::post('/{id}/edit', [BilliardTableController::class, 'update'])->name('billiard.update');
         Route::get('/{id}/delete', [BilliardTableController::class, 'destroy'])->name('billiard.destroy');
         Route::get('/update-all-tables',[BilliardTableController::class,'updateAll'])->name('billiard.update-all');
+        Route::post('/{id}/update-status',[BilliardTableController::class,'updateStatus'])->name('billiard.update-status');
     });
     Route::group(['prefix' => 'transactions'], function () {
         Route::get('/', [TransactionController::class, 'index'])->name('transaction.show');
@@ -82,7 +84,9 @@ Route::group([
         Route::post('/{id}/edit', [WaitingListController::class, 'update'])->name('waitinglist.update');
         Route::get('/{id}/delete', [WaitingListController::class, 'destroy'])->name('waitinglist.destroy');
         Route::post('/{id}/update-status', [WaitingListController::class, 'updateStatus'])->name('waitinglist.update-status');
-
+    });
+    Route::group(['prefix' => 'print'] , function(){
+        Route::get('/tx/{id}' , [PrintController::class,'transaction'])->name('print.tx');
     });
 });
 
